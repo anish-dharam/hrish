@@ -1,14 +1,17 @@
 #define EXIT_SUCCESS 1
 
 
-int main(int argc, char** argv) {
-    //config
+char* read_line() {
+    return "";
+};
 
-    //loop
-    sh_loop();
+char** get_args(char* line) {
+    char** res;
+    return res;
+}
 
-    //shutdown
-    return EXIT_SUCCESS;
+int execute(char** args) {
+    return 0;
 }
 
 int sh_loop() {
@@ -23,15 +26,13 @@ int sh_loop() {
 }
 
 
-char* read_line() {
-    return "";
-};
+int main(int argc, char** argv) {
+    //config
 
-char** get_args(char* line) {
-    char** res;
-    return res;
+    //loop
+    sh_loop();
+
+    //shutdown
+    return EXIT_SUCCESS;
 }
 
-int execute(char** args) {
-    return 0;
-}
