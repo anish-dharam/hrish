@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <string.h>
 
 #define EXIT_SUCCESS 1
 #define EXIT_FAILURE -1
 #define BUFSIZE 256
 
-#define TOK_DEL
+#define TOK_DELIMITERS " \n\a\r\t"
 
 
 char* read_line() {
@@ -39,11 +40,44 @@ char* read_line() {
 
 char** get_args(char* line) {
     int curr_bufsize = BUFSIZE;
-    char** tokens;
-    
-    // while (char* token = )
+    char** tokens = malloc(sizeof(char*) * curr_bufsize);
+    int num_tokens = 0;
+
+    char* token = strtok(line, TOK_DELIMITERS);
+    while (token) {
+
+        if (!tokens) {
+            fprintf(stderr, "hrish: couldn't allocate token buffer\n");
+            exit(EXIT_FAILURE);
+        }
+
+        tokens[num_tokens] = token;
+        num_tokens += 1;
+        if (num_tokens >= curr_bufsize) {
+            curr_bufsize += BUFSIZE;
+            tokens = realloc(tokens, sizeof(char*) * curr_bufsize);
+        }
+        token = strtok(line, NULL);
+    }
     
     return tokens;
+}
+
+int hrish_fork(char** args) {
+    // pid_t pid = fork();
+    // if (pid == 0) {
+
+    // } elif (pid > 0) {
+    //     int status;
+    //     waitpid(pid, &status, WUNTRACED);
+
+    // } else { //fork error
+    //     fprintf(stderr, "hrish: failed to fork");
+    //     exit(EXIT_FAILURE);
+
+    // }
+
+    return EXIT_SUCCESS;
 }
 
 int execute(char** args) {
