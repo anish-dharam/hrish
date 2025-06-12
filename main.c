@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <string.h>
+#include <builtins.h>
 
 #define EXIT_SUCCESS 1
 #define EXIT_FAILURE -1
@@ -64,18 +65,23 @@ char** get_args(char* line) {
 }
 
 int hrish_fork(char** args) {
-    // pid_t pid = fork();
-    // if (pid == 0) {
+    pid_t pid = fork();
+    if (pid == 0) { //child
+        int res = execvp(args[0], args);
+        if (res == -1) {
+            fprintf(stderr, "hrish: failed to exec process %s", args[0]);
+            exit(EXIT_FAILURE);
+        }
+    } else if (pid > 0) { //parent
+        int status;
+        while (!WIFEXITED(status) && !WIFSIGNALED(status)) {
+            waitpid(pid, &status, WUNTRACED);
+        }
+    } else { //fork error
+        fprintf(stderr, "hrish: failed to fork");
+        exit(EXIT_FAILURE);
 
-    // } elif (pid > 0) {
-    //     int status;
-    //     waitpid(pid, &status, WUNTRACED);
-
-    // } else { //fork error
-    //     fprintf(stderr, "hrish: failed to fork");
-    //     exit(EXIT_FAILURE);
-
-    // }
+    }
 
     return EXIT_SUCCESS;
 }
